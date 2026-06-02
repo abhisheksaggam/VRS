@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IE Hub — VRS Panel Mockups</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --teal:#0a3b3c; --teal-2:#0e4647;
+    --lime:#c2d52b; --magenta:#d6006c; --vrs-purple:#7d2d8e;
+    --ink:#13282a; --muted:#6a7c7c; --line:#e3eaea;
+    --card:#ffffff; --page:#eef3f3;
+    --hi-bg:#fde7ea; --hi-fg:#c2113f;
+    --md-bg:#fdf0dd; --md-fg:#b1730f;
+    --lo-bg:#e4f5ea; --lo-fg:#2f8f54;
+    --radius:12px;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;font-family:'Poppins',system-ui,-apple-system,sans-serif;background:#f6f8f8;color:var(--ink);-webkit-font-smoothing:antialiased;}
+
+  /* ---------- review harness (NOT the product) ---------- */
+  .harness{max-width:920px;margin:0 auto;padding:28px 20px 60px;}
+  .harness h1{font-size:18px;font-weight:600;margin:0 0 4px;}
+  .harness .sub{font-size:13px;color:var(--muted);margin:0 0 22px;line-height:1.5;}
+  .controls{background:#fff;border:1px solid var(--line);border-radius:14px;padding:16px 18px;margin-bottom:26px;box-shadow:0 1px 2px rgba(10,59,60,.04);}
+  .ctrl-row{display:flex;flex-wrap:wrap;align-items:center;gap:8px;}
+  .ctrl-row + .ctrl-row{margin-top:14px;}
+  .ctrl-label{font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);font-weight:600;width:100%;margin-bottom:2px;}
+  .chip{border:1px solid var(--line);background:#fff;color:var(--ink);font-family:inherit;font-size:12.5px;font-weight:500;padding:7px 13px;border-radius:999px;cursor:pointer;transition:.15s;}
+  .chip:hover{border-color:var(--teal);}
+  .chip.active{background:var(--teal);color:#fff;border-color:var(--teal);}
+  .annot{max-width:432px;margin:0 auto 10px;font-size:12px;color:var(--muted);background:#fff7e8;border:1px dashed #e6c98a;border-radius:8px;padding:9px 12px;line-height:1.45;display:none;}
+  .annot.show{display:block;}
+  .annot b{color:#9a6b12;}
+  .stage{background:repeating-linear-gradient(45deg,#e9efef 0 2px,transparent 2px 9px);padding:34px 20px;border-radius:16px;display:flex;justify-content:center;}
+
+  /* ---------- the product panel ---------- */
+  .panel{width:400px;max-width:100%;background:var(--card);border:1px solid var(--line);border-radius:var(--radius);box-shadow:0 6px 22px rgba(10,59,60,.10);}
+  .panel-head{background:var(--teal);color:#fff;display:flex;align-items:center;justify-content:space-between;padding:12px 16px;font-weight:600;font-size:15px;border-radius:var(--radius) var(--radius) 0 0;}
+  .panel-head .chev{opacity:.85;font-size:13px;}
+  .tabs{display:flex;gap:6px;padding:12px 12px 0;flex-wrap:wrap;}
+  .tab{font-size:11.5px;font-weight:500;border:1px solid var(--line);background:#fff;color:var(--ink);border-radius:7px;padding:5px 9px;}
+  .tab.active{background:var(--teal);color:#fff;border-color:var(--teal);}
+  .body{padding:14px 16px 16px;}
+
+  /* brand row */
+  .brand{display:flex;align-items:center;gap:9px;padding-bottom:12px;border-bottom:1px solid var(--line);margin-bottom:14px;}
+  .brand .mark{width:30px;height:30px;border-radius:7px;flex:none;background:conic-gradient(from 200deg,#8e44ad,#2aa9b5,#c14d9e,#3bb1c4,#8e44ad);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:11px;}
+  .brand .b-name{font-weight:600;font-size:13.5px;line-height:1.1;}
+  .brand .b-sub{font-size:11px;color:var(--muted);display:flex;align-items:center;gap:5px;margin-top:2px;}
+  .dot-n{width:7px;height:7px;border-radius:50%;background:var(--muted);display:inline-block;}
+
+  /* info icon + tooltip (reusable) */
+  .info{position:relative;display:inline-flex;align-items:center;justify-content:center;width:15px;height:15px;border-radius:50%;background:#e3eaea;color:#5d7070;font-size:9px;font-weight:700;font-style:normal;line-height:1;cursor:help;flex:none;}
+  .info:hover,.info:focus{background:#cdd9d9;outline:none;}
+  .tip{position:absolute;right:-2px;bottom:calc(100% + 8px);width:212px;background:var(--teal);color:#fff;font-weight:400;font-size:11.5px;line-height:1.45;letter-spacing:0;text-transform:none;white-space:normal;text-align:left;padding:9px 11px;border-radius:8px;box-shadow:0 8px 22px rgba(10,59,60,.28);opacity:0;visibility:hidden;transform:translateY(3px);transition:.15s;z-index:30;pointer-events:none;}
+  .info:hover .tip,.info:focus .tip,.info.show .tip{opacity:1;visibility:visible;transform:translateY(0);}
+
+  /* result header (Direction A) */
+  .result-head{display:flex;align-items:center;gap:7px;font-size:15px;font-weight:600;margin-bottom:14px;}
+
+  /* summary strip (Direction B) */
+  .strip{display:flex;border:1px solid var(--line);border-radius:10px;overflow:hidden;margin-bottom:14px;}
+  .strip .cell{flex:1;padding:10px 8px;text-align:center;border-right:1px solid var(--line);}
+  .strip .cell:last-child{border-right:none;}
+  .strip .s-val{font-weight:600;font-size:16px;color:var(--ink);}
+  .strip .s-lab{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;margin-top:2px;}
+
+  /* circumstance rows */
+  .flag{display:flex;align-items:center;gap:10px;border:1px solid var(--line);border-radius:10px;padding:10px 12px;margin-bottom:8px;}
+  .flag-ic{width:28px;height:28px;border-radius:7px;background:#f2e9f4;color:var(--vrs-purple);display:flex;align-items:center;justify-content:center;flex:none;font-size:14px;}
+  .flag-name{font-size:13.5px;font-weight:600;flex:1;}
+  .sev{font-size:11px;font-weight:600;padding:3px 8px;border-radius:999px;white-space:nowrap;display:inline-flex;align-items:center;gap:4px;}
+  .sev.high{background:var(--hi-bg);color:var(--hi-fg);}
+  .sev.med{background:var(--md-bg);color:var(--md-fg);}
+  .sev.low{background:var(--lo-bg);color:var(--lo-fg);}
+  .sev .info{width:13px;height:13px;font-size:8px;background:rgba(0,0,0,.08);color:inherit;}
+  .sev .info:hover,.sev .info:focus{background:rgba(0,0,0,.16);}
+
+  /* not-flagged rows */
+  .flag.muted{border-style:dashed;}
+  .flag.muted .flag-ic{background:#f1f5f5;color:#9bb0b0;}
+  .flag.muted .flag-name{font-weight:500;color:var(--muted);}
+  .tag-none{font-size:11px;color:var(--muted);background:#f1f5f5;border-radius:999px;padding:3px 9px;white-space:nowrap;}
+
+  .link-row{font-size:12.5px;color:var(--teal);font-weight:600;cursor:pointer;padding:4px 0 2px;display:inline-flex;align-items:center;gap:5px;}
+  .link-row:hover{text-decoration:underline;}
+
+  /* clear state — neutral, NOT a positive confirmation */
+  .neutral-row{display:flex;align-items:center;gap:10px;border:1px solid var(--line);background:#f5f8f8;border-radius:10px;padding:13px 14px;margin-bottom:14px;}
+  .neutral-row .nr-text{flex:1;font-size:14px;font-weight:600;color:var(--ink);}
+
+  /* pending state */
+  .pending-wrap{padding:6px 2px 4px;}
+  .status-pending{display:inline-flex;align-items:center;gap:8px;background:#eef2f3;color:#4f6b6b;font-size:12.5px;font-weight:600;padding:7px 13px;border-radius:999px;border:1px solid var(--line);}
+  .status-pending .pdot{width:8px;height:8px;border-radius:50%;background:var(--md-fg);box-shadow:0 0 0 3px var(--md-bg);}
+  .pending-wrap .e-sub{font-size:12.5px;color:var(--muted);line-height:1.5;margin:12px 0 0;}
+
+  /* reference detail accordion */
+  .acc{border:1px solid var(--line);border-radius:10px;margin-top:14px;overflow:hidden;}
+  .acc-head{display:flex;align-items:center;justify-content:space-between;padding:11px 13px;cursor:pointer;font-size:12.5px;font-weight:600;}
+  .acc-head .a-chev{color:var(--muted);font-size:11px;transition:.2s;}
+  .acc.open .acc-head .a-chev{transform:rotate(180deg);}
+  .acc-body{max-height:0;overflow:hidden;transition:max-height .3s ease;}
+  .acc.open .acc-body{max-height:260px;}
+  .meta{padding:2px 13px 12px;}
+  .meta-row{display:flex;justify-content:space-between;gap:12px;font-size:12px;padding:6px 0;border-bottom:1px dashed var(--line);}
+  .meta-row:last-of-type{border-bottom:none;}
+  .meta-row .k{color:var(--muted);}
+  .meta-row .v{font-weight:500;text-align:right;}
+
+  .disclaimer{font-size:10.5px;color:#93a4a4;line-height:1.5;margin-top:14px;display:flex;gap:7px;}
+  .disclaimer .i2{flex:none;width:14px;height:14px;border-radius:50%;background:#e3eaea;color:#6a7c7c;font-size:9px;display:flex;align-items:center;justify-content:center;font-style:normal;margin-top:1px;}
+
+  /* empty / not-subscribed shared */
+  .notsub{font-size:13px;color:#c2113f;line-height:1.55;padding:6px 2px;}
+
+  /* layout visibility */
+  .dir-b-only{display:none;}
+  .panel[data-dir="B"] .dir-a-only{display:none;}
+  .panel[data-dir="B"] .dir-b-only{display:block;}
+
+  /* state visibility */
+  .state-block{display:none;}
+  .panel[data-state="match"] #blk-match,
+  .panel[data-state="nomatch"] #blk-nomatch,
+  .panel[data-state="failed"] #blk-nomatch,
+  .panel[data-state="empty"] #blk-empty,
+  .panel[data-state="notsub"] #blk-notsub{display:block;}
+  .panel[data-state="empty"] .brand,
+  .panel[data-state="notsub"] .brand{display:none;}
+</style>
+</head>
+<body>
+<div class="harness">
+  <h1>IE Hub — VRS panel mockups</h1>
+  <p class="sub">Rendered at 400px (true right-column width). Striped backdrop = review harness, not the product.<br>
+  <b>There is no state switcher in the live product.</b> The panel renders automatically from each record's data, the client's subscription, and the user's permission. The controls below only let you preview each render condition.</p>
+
+  <div class="controls">
+    <div class="ctrl-row">
+      <span class="ctrl-label">Example records — how the panel renders per record across a queue</span>
+      <button class="chip active" data-state-btn="match">Record A · vulnerability flagged</button>
+      <button class="chip" data-state-btn="nomatch">Record B · clear</button>
+      <button class="chip" data-state-btn="failed">Record C · check failed</button>
+      <button class="chip" data-state-btn="empty">Record D · awaiting check</button>
+    </div>
+    <div class="ctrl-row">
+      <span class="ctrl-label">Access &amp; configuration conditions</span>
+      <button class="chip" data-state-btn="notsub">Client not subscribed</button>
+      <button class="chip" data-state-btn="noperm">User has no VRS access</button>
+    </div>
+    <div class="ctrl-row">
+      <span class="ctrl-label">Layout direction (flagged record)</span>
+      <button class="chip active" data-dir-btn="A">A · Stacked priority</button>
+      <button class="chip" data-dir-btn="B">B · Summary strip + accordion</button>
+    </div>
+  </div>
+
+  <div class="annot" id="annot-failed">
+    <b>What you're seeing is intentional.</b> A failed check shows to the agent as a <b>clear</b> result — never as an error, warning, or "failed" status. The failure is handled internally only; nothing about it surfaces on screen. So this condition reuses the clear view exactly.
+  </div>
+  <div class="annot" id="annot-noperm">
+    <b>Nothing renders here.</b> If the user's role lacks VRS access, the panel content is <b>absent</b> — not greyed out, not "no access". The VRS tab itself would not appear in the Insights row.
+  </div>
+
+  <div class="stage">
+    <div class="panel" id="panel" data-state="match" data-dir="A">
+      <div class="panel-head">VRS Insights <span class="chev">&#9650;</span></div>
+      <div class="tabs">
+        <span class="tab">Vulnerability</span>
+        <span class="tab">Debt Advice</span>
+        <span class="tab active">VRS</span>
+        <span class="tab">Payment</span>
+        <span class="tab">Notes</span>
+      </div>
+      <div class="body">
+
+        <div class="brand">
+          <div class="mark">VRS</div>
+          <div>
+            <div class="b-name">VRS Check</div>
+            <div class="b-sub"><span class="dot-n"></span> Completed &middot; 20 May 2025</div>
+          </div>
+        </div>
+
+        <!-- ============ RECORD A — FLAGGED ============ -->
+        <div class="state-block" id="blk-match">
+
+          <!-- Direction A: single clear header (no repeated yes/count/VC-flag) -->
+          <div class="dir-a-only">
+            <div class="result-head">
+              3 of 8 circumstances flagged
+              <span class="info" tabindex="0" data-tip>i<span class="tip">Vulnerable circumstances identified by VRS, based on the data held at the time of the check.</span></span>
+            </div>
+          </div>
+
+          <!-- Direction B: compact summary strip -->
+          <div class="dir-b-only">
+            <div class="strip">
+              <div class="cell"><div class="s-val">3<span style="font-size:12px;color:var(--muted);font-weight:500;"> / 8</span></div><div class="s-lab">Flagged</div></div>
+              <div class="cell"><div class="s-val" style="font-size:13px;">20 May 2025</div><div class="s-lab">Updated</div></div>
+            </div>
+          </div>
+
+          <div class="flag">
+            <span class="flag-ic">&#9680;</span>
+            <span class="flag-name">Mental Health</span>
+            <span class="sev high">High <span class="info" tabindex="0" data-tip>i<span class="tip">High &mdash; strong indicators present. Prioritise appropriate support and consideration.</span></span></span>
+            <span class="info" tabindex="0" data-tip>i<span class="tip">Indicators suggest the customer may be experiencing a mental health condition.</span></span>
+          </div>
+
+          <div class="flag">
+            <span class="flag-ic">&pound;</span>
+            <span class="flag-name">Financial Difficulty</span>
+            <span class="sev med">Medium <span class="info" tabindex="0" data-tip>i<span class="tip">Medium &mdash; some indicators present. Consider tailored support during the conversation.</span></span></span>
+            <span class="info" tabindex="0" data-tip>i<span class="tip">Information suggests the customer may be experiencing financial difficulty.</span></span>
+          </div>
+
+          <div class="flag">
+            <span class="flag-ic">&hearts;</span>
+            <span class="flag-name">Caring Responsibilities</span>
+            <span class="sev low">Low <span class="info" tabindex="0" data-tip>i<span class="tip">Low &mdash; limited indicators present. Remain aware during the conversation.</span></span></span>
+            <span class="info" tabindex="0" data-tip>i<span class="tip">Information suggests the customer may have caring responsibilities.</span></span>
+          </div>
+
+          <span class="link-row" data-shownf>Show 5 not flagged &#9662;</span>
+          <div id="notflagged" style="display:none;padding-top:8px;">
+            <div class="flag muted"><span class="flag-ic">&middot;</span><span class="flag-name">Bereavement</span><span class="tag-none">Not flagged</span></div>
+            <div class="flag muted"><span class="flag-ic">&middot;</span><span class="flag-name">Physical Health / Disability</span><span class="tag-none">Not flagged</span></div>
+            <div class="flag muted"><span class="flag-ic">&middot;</span><span class="flag-name">Recent Income Shock</span><span class="tag-none">Not flagged</span></div>
+            <div class="flag muted"><span class="flag-ic">&middot;</span><span class="flag-name">Cognitive Impairment</span><span class="tag-none">Not flagged</span></div>
+            <div class="flag muted"><span class="flag-ic">&middot;</span><span class="flag-name">Low Financial Resilience</span><span class="tag-none">Not flagged</span></div>
+          </div>
+
+          <div class="acc" id="acc-details">
+            <div class="acc-head" data-acc><span>Reference detail</span><span class="a-chev">&#9660;</span></div>
+            <div class="acc-body"><div class="meta">
+              <div class="meta-row"><span class="k">Reference</span><span class="v">VRS-250520-103215</span></div>
+              <div class="meta-row"><span class="k">VC Flag ID</span><span class="v">VC-987654321</span></div>
+              <div class="meta-row"><span class="k">VC Flag</span><span class="v">Y</span></div>
+              <div class="meta-row"><span class="k">Source</span><span class="v">VRS</span></div>
+              <div class="meta-row"><span class="k">Last updated</span><span class="v">20 May 2025</span></div>
+            </div></div>
+          </div>
+
+          <div class="disclaimer"><span class="i2">i</span><span>Not a decision-making tool &mdash; use alongside your own assessment and conversations.</span></div>
+        </div>
+
+        <!-- ============ RECORD B — CLEAR (also used for failed) ============ -->
+        <div class="state-block" id="blk-nomatch">
+          <div class="neutral-row">
+            <span class="nr-text">No vulnerable circumstances flagged</span>
+            <span class="info" tabindex="0" data-tip>i<span class="tip">VRS did not return any vulnerability indicators for this customer, based on the data held at the time of the check.</span></span>
+          </div>
+
+          <span class="link-row" data-shownf>Show all 8 circumstances &#9662;</span>
+          <div id="notflagged2" style="display:none;padding-top:8px;">
+            <div class="flag muted"><span class="flag-ic">&middot;</span><span class="flag-name">Mental Health</span><span class="tag-none">Not flagged</span></div>
+            <div class="flag muted"><span class="flag-ic">&middot;</span><span class="flag-name">Financial Difficulty</span><span class="tag-none">Not flagged</span></div>
+            <div class="flag muted"><span class="flag-ic">&middot;</span><span class="flag-name">Caring Responsibilities</span><span class="tag-none">Not flagged</span></div>
+            <div class="flag muted"><span class="flag-ic">&middot;</span><span class="flag-name">Bereavement</span><span class="tag-none">Not flagged</span></div>
+            <div class="flag muted"><span class="flag-ic">&middot;</span><span class="flag-name">Physical Health / Disability</span><span class="tag-none">Not flagged</span></div>
+            <div class="flag muted"><span class="flag-ic">&middot;</span><span class="flag-name">Recent Income Shock</span><span class="tag-none">Not flagged</span></div>
+            <div class="flag muted"><span class="flag-ic">&middot;</span><span class="flag-name">Cognitive Impairment</span><span class="tag-none">Not flagged</span></div>
+            <div class="flag muted"><span class="flag-ic">&middot;</span><span class="flag-name">Low Financial Resilience</span><span class="tag-none">Not flagged</span></div>
+          </div>
+
+          <div class="acc" id="acc-details-2">
+            <div class="acc-head" data-acc><span>Reference detail</span><span class="a-chev">&#9660;</span></div>
+            <div class="acc-body"><div class="meta">
+              <div class="meta-row"><span class="k">Reference</span><span class="v">VRS-250520-104410</span></div>
+              <div class="meta-row"><span class="k">VC Flag</span><span class="v">N</span></div>
+              <div class="meta-row"><span class="k">Source</span><span class="v">VRS</span></div>
+              <div class="meta-row"><span class="k">Last updated</span><span class="v">20 May 2025</span></div>
+            </div></div>
+          </div>
+          <div class="disclaimer"><span class="i2">i</span><span>Not a decision-making tool &mdash; use alongside your own assessment and conversations.</span></div>
+        </div>
+
+        <!-- ============ RECORD D — AWAITING (pending status) ============ -->
+        <div class="state-block" id="blk-empty">
+          <div class="pending-wrap">
+            <span class="status-pending"><span class="pdot"></span> Pending</span>
+            <p class="e-sub">A VRS search runs automatically when this I&amp;E is shared with the client. The result will appear here once the check completes.</p>
+          </div>
+        </div>
+
+        <!-- ============ NOT SUBSCRIBED ============ -->
+        <div class="state-block" id="blk-notsub">
+          <p class="notsub">You have not subscribed to this service. Please speak to your IE Hub account manager if you would like to include a VRS Check service for your customers.</p>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  const panel = document.getElementById('panel');
+
+  document.querySelectorAll('[data-state-btn]').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      const s = btn.dataset.stateBtn;
+      document.querySelectorAll('[data-state-btn]').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('annot-failed').classList.toggle('show', s==='failed');
+      document.getElementById('annot-noperm').classList.toggle('show', s==='noperm');
+      if(s==='noperm'){ panel.style.display='none'; return; }
+      panel.style.display='';
+      panel.dataset.state = s;
+    });
+  });
+
+  document.querySelectorAll('[data-dir-btn]').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      document.querySelectorAll('[data-dir-btn]').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      panel.dataset.dir = btn.dataset.dirBtn;
+    });
+  });
+
+  // tooltips — hover works via CSS; click toggles for touch
+  document.querySelectorAll('[data-tip]').forEach(t=>{
+    t.addEventListener('click',e=>{
+      e.stopPropagation();
+      const open = t.classList.contains('show');
+      document.querySelectorAll('[data-tip].show').forEach(o=>o.classList.remove('show'));
+      if(!open) t.classList.add('show');
+    });
+  });
+  document.addEventListener('click',()=>document.querySelectorAll('[data-tip].show').forEach(o=>o.classList.remove('show')));
+
+  // accordions
+  document.querySelectorAll('[data-acc]').forEach(h=>{
+    h.addEventListener('click',()=>h.closest('.acc').classList.toggle('open'));
+  });
+
+  // show / hide not-flagged circumstances
+  document.querySelectorAll('[data-shownf]').forEach(l=>{
+    l.addEventListener('click',()=>{
+      const box = l.parentElement.querySelector('#notflagged, #notflagged2');
+      const willShow = box.style.display==='none';
+      box.style.display = willShow ? 'block' : 'none';
+      const txt = l.textContent.replace(/[\u25BE\u25B4]/g,'').trim().replace(/^(Show|Hide)\s+/,'');
+      l.innerHTML = (willShow ? 'Hide ' : 'Show ') + txt + (willShow ? ' &#9652;' : ' &#9662;');
+    });
+  });
+</script>
+</body>
+</html>
